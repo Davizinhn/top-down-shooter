@@ -1,10 +1,10 @@
 #pragma once
 #include <raylib.h>
+#include "global.hpp"
 
 class Hand
 {
 public:
-    enum Weapon {HANDS, SWORD};
     Hand(bool=false);
     void Update();
     void Move(Vector2, Rectangle, Vector2);

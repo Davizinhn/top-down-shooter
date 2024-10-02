@@ -8,6 +8,7 @@ public:
     Player(bool=false);
     void Update();
     void Draw();
+    Vector2 GetPosition();
     Hand hand = Hand(true);
 
 private:

@@ -1,11 +1,13 @@
 #include <raylib.h>
 #include "player.hpp"
+#include "global.hpp"
 
 enum SceneState {INIT, GAME};
 
 SceneState curScene = INIT;
 
 Player player = Player(true);
+Texture2D sampleMap;
 
 void ChangeScene(SceneState newScene) {
     if(curScene == newScene)
@@ -16,6 +18,7 @@ void ChangeScene(SceneState newScene) {
     switch(newScene) { 
         case GAME:
             // Game scene start
+            sampleMap = LoadTextureFromImage(LoadImage("resources/scenary/sampleMap.png"));
             player = Player();
             break;
         default:
@@ -41,6 +44,8 @@ void Draw() {
         case GAME:
             // Game scene draw
 
+            DrawTexture(sampleMap, 0, 0, WHITE);
+
             player.Draw();
             DrawFPS(0,0);
             break;
@@ -56,6 +61,7 @@ int main()
 
     InitWindow(screenWidth, screenHeight, "Top-Down Shooter");
     SetTargetFPS(60);
+
     ChangeScene(GAME);
     while (!WindowShouldClose())
     {

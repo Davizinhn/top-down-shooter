@@ -2,6 +2,7 @@
 #include <raylib.h>
 #include <math.h>
 #include <iostream>
+#include "global.hpp"
 
 Hand::Hand(bool dontLoad)
 {

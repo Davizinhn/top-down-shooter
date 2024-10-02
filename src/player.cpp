@@ -1,6 +1,7 @@
 #include "player.hpp"
 #include <raylib.h>
 #include "hand.hpp"
+#include "global.hpp"
 
 Player::Player(bool dontLoad)
 {
@@ -38,7 +39,7 @@ void Player::Update()
     hand.Move(position, col, center);
 
     if(IsKeyPressed(KEY_C)) {
-        hand.ChangeWeapon(hand.curWeapon == hand.HANDS ? hand.SWORD : hand.HANDS);
+        hand.ChangeWeapon(hand.curWeapon == HANDS ? SWORD : HANDS);
     }
 }
 
@@ -51,4 +52,8 @@ void Player::Draw()
 float Player::Clamp(float n, float lower, float upper) {
     n = ( n > lower ) * n + !( n > lower ) * lower;
     return ( n < upper ) * n + !( n < upper ) * upper;
+}
+
+Vector2 Player::GetPosition() {
+    return position;
 }
