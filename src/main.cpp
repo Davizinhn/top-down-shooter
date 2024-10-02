@@ -1,9 +1,11 @@
 #include <raylib.h>
 #include "player.hpp"
 
-enum SceneState {GAME};
+enum SceneState {INIT, GAME};
 
-SceneState curScene = GAME;
+SceneState curScene = INIT;
+
+Player player = Player(true);
 
 void ChangeScene(SceneState newScene) {
     if(curScene == newScene)
@@ -14,6 +16,9 @@ void ChangeScene(SceneState newScene) {
     switch(newScene) { 
         case GAME:
             // Game scene start
+            player = Player();
+            break;
+        default:
             break;
     }
 }
@@ -22,6 +27,11 @@ void Update() {
     switch(curScene) { 
         case GAME:
             // Game scene update
+
+            player.Update();
+
+            break;
+        default:
             break;
     }
 }
@@ -30,6 +40,11 @@ void Draw() {
     switch(curScene) { 
         case GAME:
             // Game scene draw
+
+            player.Draw();
+            DrawFPS(0,0);
+            break;
+        default:
             break;
     }
 }
@@ -41,7 +56,7 @@ int main()
 
     InitWindow(screenWidth, screenHeight, "Top-Down Shooter");
     SetTargetFPS(60);
-
+    ChangeScene(GAME);
     while (!WindowShouldClose())
     {
         Update();
