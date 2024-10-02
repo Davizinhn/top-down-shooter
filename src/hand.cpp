@@ -1,5 +1,7 @@
 #include "hand.hpp"
 #include <raylib.h>
+#include <math.h>
+#include <iostream>
 
 Hand::Hand(bool dontLoad)
 {
@@ -16,7 +18,31 @@ void Hand::Update()
 
 }
 
-void Hand::Draw()
+void Hand::Move(Vector2 pos, Rectangle col, Vector2 center) {
+    angle = atan2(GetMousePosition().y - pos.y, GetMousePosition().x - pos.x);
+    float orbitRadius = 30 +(5)*(sprite.width/10);
+    position = {pos.x + orbitRadius * cos(angle), pos.y + orbitRadius * sin(angle)};
+}
+
+void Hand::ChangeWeapon(Weapon newWeapon) {
+    curWeapon = newWeapon;
+    switch (newWeapon)
+    {
+        case HANDS:
+            sprite = LoadTextureFromImage(LoadImage("resources/player/hand.png"));
+            break;
+        case SWORD:
+            sprite = LoadTextureFromImage(LoadImage("resources/items/weapon_sword.png"));
+            break;
+        default:
+            std::cout<<"Weapon not implemented yet."<<std::endl;
+            break;
+    }
+    center = {(float)sprite.width/2, (float)sprite.height/2};
+    col = {0, 0, (float)sprite.width, (float)sprite.height};
+}
+
+void Hand::Draw() 
 {
-    DrawTexturePro(sprite, col, Rectangle({position.x, position.y, (float)sprite.width, (float)sprite.height}), center, 0, WHITE);
+    DrawTexturePro(sprite, col, Rectangle({position.x, position.y, (float)sprite.width, (float)sprite.height}), center, angle * (180 / PI), WHITE);
 }

@@ -35,7 +35,11 @@ void Player::Update()
     curVelocity = {0, 0};
     #pragma endregion
 
-    hand.position = position;
+    hand.Move(position, col, center);
+
+    if(IsKeyPressed(KEY_C)) {
+        hand.ChangeWeapon(hand.curWeapon == hand.HANDS ? hand.SWORD : hand.HANDS);
+    }
 }
 
 void Player::Draw()
