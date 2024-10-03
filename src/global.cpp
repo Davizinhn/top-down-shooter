@@ -33,7 +33,7 @@ std::vector<std::string> getDirectoryFiles(const std::string& directoryPath, con
         }
         closedir(dir);
     } else {
-        perror("Erro ao abrir o diretório");
+        perror("Directory not found.");
     }
 
     return fileList;

@@ -8,7 +8,7 @@ Hand::Hand(bool dontLoad)
 {
     position = {100, 100};
     if(!dontLoad) {
-        sprite = LoadTextureFromImage(LoadImage("resources/player/hand.png"));
+        sprite = Textures::shared_instance().get("hand");
     }
     col = {0, 0, (float)sprite.width, (float)sprite.height};
     center = {(float)sprite.width/2, (float)sprite.height/2};
@@ -30,10 +30,10 @@ void Hand::ChangeWeapon(Weapon newWeapon) {
     switch (newWeapon)
     {
         case HANDS:
-            sprite = LoadTextureFromImage(LoadImage("resources/player/hand.png"));
+            sprite = Textures::shared_instance().get("hand");
             break;
         case SWORD:
-            sprite = LoadTextureFromImage(LoadImage("resources/items/weapon_sword.png"));
+            sprite = Textures::shared_instance().get("weapon_sword");
             break;
         default:
             std::cout<<"Weapon not implemented yet."<<std::endl;
