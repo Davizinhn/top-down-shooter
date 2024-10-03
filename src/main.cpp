@@ -18,7 +18,7 @@ void ChangeScene(SceneState newScene) {
     switch(newScene) { 
         case GAME:
             // Game scene start
-            sampleMap = LoadTextureFromImage(LoadImage("resources/scenary/sampleMap.png"));
+            sampleMap = Textures::shared_instance().get("sampleMap");
             player = Player();
             break;
         default:
@@ -61,7 +61,7 @@ int main()
 
     InitWindow(screenWidth, screenHeight, "Top-Down Shooter");
     SetTargetFPS(60);
-
+    Textures::shared_instance().LoadAll();
     ChangeScene(GAME);
     while (!WindowShouldClose())
     {

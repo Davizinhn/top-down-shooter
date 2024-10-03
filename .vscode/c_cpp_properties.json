@@ -4,7 +4,8 @@
             "name": "windows-gcc-x64",
             "includePath": [
                 "${workspaceFolder}/**",
-                "C:\\raylib\\raylib\\src\\"
+                "C:\\raylib\\raylib\\src\\",
+                "C:/raylib/raylib/src/external"
             ],
             "defines": [
                 "_DEBUG",
@@ -15,7 +16,7 @@
             ],
             "compilerPath": "gcc",
             "cStandard": "${default}",
-            "cppStandard": "${default}",
+            "cppStandard": "c++17",
             "intelliSenseMode": "windows-gcc-x64",
             "configurationProvider": "ms-vscode.makefile-tools"
         },

@@ -7,7 +7,7 @@ Player::Player(bool dontLoad)
 {
     position = {100, 100};
     if(!dontLoad) {
-        sprite = LoadTextureFromImage(LoadImage("resources/player/body.png"));
+        sprite = Textures::shared_instance().get("body");
     }
     col = {0, 0, (float)sprite.width, (float)sprite.height};
     center = {(float)sprite.width/2, (float)sprite.height/2};

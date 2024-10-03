@@ -9,7 +9,9 @@
             "command": "make",
             "args": [
                 "PLATFORM=PLATFORM_DESKTOP",
-                "BUILD_MODE=DEBUG"
+                "BUILD_MODE=DEBUG",
+                "--std", 
+                "c++17"
             ],
             "windows": {
                 "command": "C:/raylib/w64devkit/bin/mingw32-make.exe",

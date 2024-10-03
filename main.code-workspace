@@ -73,7 +73,15 @@
 			"xmemory": "cpp",
 			"xstring": "cpp",
 			"xtr1common": "cpp",
-			"xutility": "cpp"
+			"xutility": "cpp",
+			"filesystem": "cpp",
+			"chrono": "cpp",
+			"forward_list": "cpp",
+			"iomanip": "cpp",
+			"map": "cpp",
+			"ratio": "cpp",
+			"xtree": "cpp",
+			"regex": "cpp"
 		},
 		"git.autoRepositoryDetection": false,
 		"git.enabled": false
