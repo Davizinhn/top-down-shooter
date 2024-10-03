@@ -54,6 +54,12 @@ void Textures::LoadAll() {
     }
 }
 
+void Textures::UnloadAll() {
+    for (const auto& kv : list) {
+        UnloadTexture(kv.second);
+    }
+}
+
 Texture2D Textures::get(string name) {
     
     return list[name];

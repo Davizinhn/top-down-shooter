@@ -71,7 +71,7 @@ int main()
         Draw();
         EndDrawing();
     }
-
+    Textures::shared_instance().UnloadAll();
     CloseWindow();
     return 0;
 }
