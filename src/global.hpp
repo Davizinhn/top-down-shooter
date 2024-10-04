@@ -18,8 +18,7 @@ class Textures
         Texture2D get(string);
         std::vector<std::string> SplitString(const string&, const string&);
         void SpawnProjectile(Projectile);
-        vector<Projectile> GetProjectiles();
+        vector<Projectile> projectiles;
     private:
         Textures();
-        vector<Projectile> projectiles;
 };

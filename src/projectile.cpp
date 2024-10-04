@@ -8,7 +8,7 @@ using namespace std;
 Projectile::Projectile(Vector2 pos, float ang, float vel, string tex)
 {
     position = pos;
-    angle = ang * (180 / PI);
+    angle = ang;
     velocity = vel;
     sprite = Textures::shared_instance().get(tex);
     col = {0, 0, (float)sprite.width, (float)sprite.height};
@@ -17,16 +17,13 @@ Projectile::Projectile(Vector2 pos, float ang, float vel, string tex)
 
 void Projectile::Update()
 {
-    position.x += velocity;
-    position.y += velocity;
-
-    position = {position.x, position.y};
+    position = {position.x+velocity*cos(angle), position.y+velocity*sin(angle)};
 }
 
 
 void Projectile::Draw()
 {
-    DrawTexturePro(sprite, col, Rectangle({position.x, position.y, (float)sprite.width, (float)sprite.height}), center, angle, WHITE);
+    DrawTexturePro(sprite, col, Rectangle({position.x, position.y, (float)sprite.width, (float)sprite.height}), center, angle * (180 / PI), WHITE);
 }
 
 Vector2 Projectile::GetPosition() {

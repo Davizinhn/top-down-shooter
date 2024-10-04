@@ -41,7 +41,7 @@ void Player::Update()
     hand.Update();
 
     if(IsKeyPressed(KEY_C)) {
-        hand.ChangeWeapon(hand.curWeapon == HANDS ? BOW : HANDS);
+        hand.ChangeWeapon(hand.curWeapon == BOW ? SWORD : BOW);
     }
 }
 

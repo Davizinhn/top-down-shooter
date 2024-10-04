@@ -9,7 +9,7 @@ enum SceneState {INIT, GAME};
 SceneState curScene = INIT;
 
 Player player = Player(true);
-Enemy enemy = Enemy(true);
+//Enemy enemy = Enemy(true);
 Texture2D sampleMap;
 
 void ChangeScene(SceneState newScene) {
@@ -38,11 +38,10 @@ void Update() {
             player.Update();
             //enemy.Update(player.GetPosition());
 
-            for (auto &&projec : Textures::shared_instance().GetProjectiles())
+            for (auto &&projec : Textures::shared_instance().projectiles)
             {
                 projec.Update();
             }
-            
 
             break;
         default:
@@ -60,7 +59,7 @@ void Draw() {
             //enemy.Draw();
             player.Draw();
 
-            for (auto &&projec : Textures::shared_instance().GetProjectiles())
+            for (auto &&projec : Textures::shared_instance().projectiles)
             {
                 projec.Draw();
             }

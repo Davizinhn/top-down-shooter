@@ -10,7 +10,7 @@ public:
     void Move(Vector2, Rectangle, Vector2);
     void Draw();
     void ChangeWeapon(Weapon);
-    Weapon curWeapon = HANDS;
+    Weapon curWeapon = SWORD;
     Vector2 position;
     bool attacking;
 

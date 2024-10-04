@@ -33,7 +33,7 @@ void Hand::Update()
         case BOW:
             if(IsMouseButtonPressed(0) && canAttack) {
                 InitTimer(0.45);
-                Textures::shared_instance().SpawnProjectile(Projectile({position, angle, 10, "arrow"}));
+                Textures::shared_instance().SpawnProjectile(Projectile({position, angle, 8, "arrow"}));
                 framesCounter = 0;
                 currentFrame = 0;
                 animating = true;

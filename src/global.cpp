@@ -61,7 +61,6 @@ void Textures::UnloadAll() {
 }
 
 Texture2D Textures::get(string name) {
-    
     return list[name];
 }
 
@@ -76,8 +75,4 @@ vector<string> Textures::SplitString(const string& str, const string& regex_str)
 
 void Textures::SpawnProjectile(Projectile newProjectile) {
     projectiles.push_back(newProjectile);
-}
-
-vector<Projectile> Textures::GetProjectiles() {
-    return projectiles;
 }
