@@ -1,6 +1,7 @@
 #include "enemy.hpp"
 #include <raylib.h>
 #include "global.hpp"
+#include <math.h>
 
 Enemy::Enemy(bool dontLoad)
 {
@@ -14,19 +15,21 @@ Enemy::Enemy(bool dontLoad)
 
 void Enemy::Update(Vector2 playerPosition)
 {
-    curVelocity={curVelocity.x+(playerPosition.x-position.x), curVelocity.y+(playerPosition.y-position.y)};
+    Vector2 direction = {playerPosition.x - position.x, playerPosition.y - position.y};
 
-    float clampValue = curVelocity.x != 0 && curVelocity.y != 0 ? 0.7: 1;
-    curVelocity = {Clamp(curVelocity.x, -clampValue, clampValue), Clamp(curVelocity.y, -clampValue, clampValue)};
+    float magnitude = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+    if (magnitude > 0) {
+        direction.x /= magnitude;
+        direction.y /= magnitude;
+    }
 
-    position = {position.x+curVelocity.x, position.y+curVelocity.y};
-
-    curVelocity = {0, 0};
+    position = {position.x + direction.x * moveSpeed, position.y + direction.y * moveSpeed};
 }
 
 void Enemy::Draw()
 {
-    DrawTexturePro(sprite, col, Rectangle({position.x, position.y, (float)sprite.width, (float)sprite.height}), center, 0, WHITE);
+    DrawTexturePro(sprite, col, Rectangle({position.x, position.y, (float)sprite.width, (float)sprite.height}), center, 0, RED);
+    //DrawRectangleLinesEx(GetRectangle(), 3, WHITE);
 }
 
 float Enemy::Clamp(float n, float lower, float upper) {
@@ -36,4 +39,8 @@ float Enemy::Clamp(float n, float lower, float upper) {
 
 Vector2 Enemy::GetPosition() {
     return position;
+}
+
+Rectangle Enemy::GetRectangle() {
+    return {position.x-center.x, position.y-center.y, (float)sprite.width, (float)sprite.height};
 }

@@ -5,6 +5,7 @@
 #include <map>
 #include "projectile.hpp"
 #include <vector>
+#include "enemy.hpp"
 using namespace std;
 
 enum Weapon {HANDS, SWORD, BOW};
@@ -18,7 +19,9 @@ class Textures
         Texture2D get(string);
         std::vector<std::string> SplitString(const string&, const string&);
         void SpawnProjectile(Projectile);
+        void SpawnEnemy(Enemy);
         vector<Projectile> projectiles;
+        vector<Enemy> enemies;
     private:
         Textures();
 };

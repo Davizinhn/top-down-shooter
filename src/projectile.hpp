@@ -1,6 +1,7 @@
 #pragma once
 #include <raylib.h>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -11,6 +12,7 @@ class Projectile
         void Update();
         void Draw();
         Vector2 GetPosition();
+        vector<Vector2> GetRotatedRectangle();
 
     private:
         Rectangle col;

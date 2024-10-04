@@ -76,3 +76,7 @@ vector<string> Textures::SplitString(const string& str, const string& regex_str)
 void Textures::SpawnProjectile(Projectile newProjectile) {
     projectiles.push_back(newProjectile);
 }
+
+void Textures::SpawnEnemy(Enemy newEnemy) {
+    enemies.push_back(newEnemy);
+}
