@@ -7,6 +7,7 @@
 #include <sys/types.h>
 #include <cstring>
 #include <regex>
+#include <raymath.h>
 
 vector<string> getDirectoryFiles(const string& directoryPath, const vector<string>& extensions) {
     vector<string> fileList;
@@ -79,4 +80,44 @@ void Textures::SpawnProjectile(Projectile newProjectile) {
 
 void Textures::SpawnEnemy(Enemy newEnemy) {
     enemies.push_back(newEnemy);
+}
+
+bool Textures::CheckCollisionPolygons(const vector<Vector2>& poly1, const vector<Vector2>& poly2) {
+    auto checkOverlapOnAxis = [](const Vector2& axis, const vector<Vector2>& poly1, const vector<Vector2>& poly2) -> bool {
+        float min1 = INFINITY, max1 = -INFINITY, min2 = INFINITY, max2 = -INFINITY;
+
+        for (const auto& point : poly1) {
+            float projection = Vector2DotProduct(point, axis);
+            min1 = fminf(min1, projection);
+            max1 = fmaxf(max1, projection);
+        }
+
+        for (const auto& point : poly2) {
+            float projection = Vector2DotProduct(point, axis);
+            min2 = fminf(min2, projection);
+            max2 = fmaxf(max2, projection);
+        }
+
+        return max1 >= min2 && max2 >= min1;
+    };
+
+    vector<Vector2> axes;
+
+    for (size_t i = 0; i < poly1.size(); i++) {
+        Vector2 edge = Vector2Subtract(poly1[(i + 1) % poly1.size()], poly1[i]);
+        axes.push_back(Vector2Normalize({-edge.y, edge.x}));
+    }
+
+    for (size_t i = 0; i < poly2.size(); i++) {
+        Vector2 edge = Vector2Subtract(poly2[(i + 1) % poly2.size()], poly2[i]);
+        axes.push_back(Vector2Normalize({-edge.y, edge.x}));
+    }
+
+    for (const auto& axis : axes) {
+        if (!checkOverlapOnAxis(axis, poly1, poly2)) {
+            return false;
+        }
+    }
+
+    return true;
 }

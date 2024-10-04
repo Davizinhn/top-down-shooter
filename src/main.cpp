@@ -13,46 +13,6 @@ SceneState curScene = INIT;
 Player player = Player(true);
 Texture2D sampleMap;
 
-bool CheckCollisionPolygons(const std::vector<Vector2>& poly1, const std::vector<Vector2>& poly2) {
-    auto checkOverlapOnAxis = [](const Vector2& axis, const std::vector<Vector2>& poly1, const std::vector<Vector2>& poly2) -> bool {
-        float min1 = INFINITY, max1 = -INFINITY, min2 = INFINITY, max2 = -INFINITY;
-
-        for (const auto& point : poly1) {
-            float projection = Vector2DotProduct(point, axis);
-            min1 = fminf(min1, projection);
-            max1 = fmaxf(max1, projection);
-        }
-
-        for (const auto& point : poly2) {
-            float projection = Vector2DotProduct(point, axis);
-            min2 = fminf(min2, projection);
-            max2 = fmaxf(max2, projection);
-        }
-
-        return max1 >= min2 && max2 >= min1;
-    };
-
-    std::vector<Vector2> axes;
-
-    for (size_t i = 0; i < poly1.size(); i++) {
-        Vector2 edge = Vector2Subtract(poly1[(i + 1) % poly1.size()], poly1[i]);
-        axes.push_back(Vector2Normalize({-edge.y, edge.x}));
-    }
-
-    for (size_t i = 0; i < poly2.size(); i++) {
-        Vector2 edge = Vector2Subtract(poly2[(i + 1) % poly2.size()], poly2[i]);
-        axes.push_back(Vector2Normalize({-edge.y, edge.x}));
-    }
-
-    for (const auto& axis : axes) {
-        if (!checkOverlapOnAxis(axis, poly1, poly2)) {
-            return false;
-        }
-    }
-
-    return true;
-}
-
 void ChangeScene(SceneState newScene) {
     if(curScene == newScene)
         return;
@@ -77,14 +37,14 @@ void ProjectileCollision() {
         for (int j = 0; j < (int)Textures::shared_instance().enemies.size(); j++) {
             auto projectilePolygon = Textures::shared_instance().projectiles[i].GetRotatedRectangle();
             Rectangle enemyRect = Textures::shared_instance().enemies[j].GetRectangle();
-            std::vector<Vector2> enemyPolygon = {
+            vector<Vector2> enemyPolygon = {
                 { enemyRect.x, enemyRect.y },
                 { enemyRect.x + enemyRect.width, enemyRect.y },
                 { enemyRect.x + enemyRect.width, enemyRect.y + enemyRect.height },
                 { enemyRect.x, enemyRect.y + enemyRect.height }
             };
 
-            if (CheckCollisionPolygons(enemyPolygon, projectilePolygon)) {
+            if (Textures::shared_instance().CheckCollisionPolygons(enemyPolygon, projectilePolygon)) {
                 Textures::shared_instance().enemies.erase(Textures::shared_instance().enemies.begin() + j);
                 Textures::shared_instance().projectiles.erase(Textures::shared_instance().projectiles.begin() + i);
             }

@@ -32,11 +32,11 @@ void Hand::Update()
             break;
         case BOW:
             if(IsMouseButtonPressed(0) && canAttack) {
-                InitTimer(0.45);
-                Textures::shared_instance().SpawnProjectile(Projectile({position, angle, 8, "arrow"}));
+                InitTimer(0.3);
                 framesCounter = 0;
                 currentFrame = 0;
                 animating = true;
+                Textures::shared_instance().SpawnProjectile(Projectile({position, angle, 14, "arrow"}));
             }
             break;
         default:
@@ -91,7 +91,7 @@ void Hand::ChangeWeapon(Weapon newWeapon) {
             break;
         case BOW:
             sprite = Textures::shared_instance().get("bow_animated");
-            framesSpeed = 10;
+            framesSpeed = 13;
             maxFrames = 3;
             xOffset = 0;
             break;

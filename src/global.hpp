@@ -22,6 +22,7 @@ class Textures
         void SpawnEnemy(Enemy);
         vector<Projectile> projectiles;
         vector<Enemy> enemies;
+        bool CheckCollisionPolygons(const vector<Vector2>&, const vector<Vector2>&);
     private:
         Textures();
 };
