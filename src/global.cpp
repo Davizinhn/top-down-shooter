@@ -8,14 +8,14 @@
 #include <cstring>
 #include <regex>
 
-std::vector<std::string> getDirectoryFiles(const std::string& directoryPath, const std::vector<std::string>& extensions) {
-    std::vector<std::string> fileList;
+vector<string> getDirectoryFiles(const string& directoryPath, const vector<string>& extensions) {
+    vector<string> fileList;
     DIR *dir;
     struct dirent *ent;
 
     if ((dir = opendir(directoryPath.c_str())) != NULL) {
         while ((ent = readdir(dir)) != NULL) {
-            std::string fileName = ent->d_name;
+            string fileName = ent->d_name;
 
             if (fileName == "." || fileName == "..") {
                 continue;
@@ -49,7 +49,7 @@ void Textures::LoadAll() {
         fileList = getDirectoryFiles(folders[j], {".png"});
         for(int i = 0; i<(int)fileList.size(); i++) {
             vector<string> splittedString = SplitString(fileList[i], "/");
-            list[(regex_replace(splittedString[(int)splittedString.size()-1], std::regex("\\.png"), ""))] = LoadTextureFromImage(LoadImage(fileList[i].c_str()));
+            list[(regex_replace(splittedString[(int)splittedString.size()-1], regex("\\.png"), ""))] = LoadTextureFromImage(LoadImage(fileList[i].c_str()));
         }
     }
 }
@@ -65,12 +65,19 @@ Texture2D Textures::get(string name) {
     return list[name];
 }
 
-std::vector<std::string> Textures::SplitString(const string& str, const string& regex_str) {
-    std::regex regexz(regex_str);
-    std::vector<std::string> list(
-        std::sregex_token_iterator(str.begin(), str.end(), regexz, -1),
-        std::sregex_token_iterator()
+vector<string> Textures::SplitString(const string& str, const string& regex_str) {
+    regex regexz(regex_str);
+    vector<string> list(
+        sregex_token_iterator(str.begin(), str.end(), regexz, -1),
+        sregex_token_iterator()
     );
     return list;
 }
 
+void Textures::SpawnProjectile(Projectile newProjectile) {
+    projectiles.push_back(newProjectile);
+}
+
+vector<Projectile> Textures::GetProjectiles() {
+    return projectiles;
+}

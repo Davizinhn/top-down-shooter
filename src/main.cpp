@@ -1,12 +1,15 @@
 #include <raylib.h>
 #include "player.hpp"
 #include "global.hpp"
+#include "enemy.hpp"
+#include "projectile.hpp"
 
 enum SceneState {INIT, GAME};
 
 SceneState curScene = INIT;
 
 Player player = Player(true);
+Enemy enemy = Enemy(true);
 Texture2D sampleMap;
 
 void ChangeScene(SceneState newScene) {
@@ -20,6 +23,7 @@ void ChangeScene(SceneState newScene) {
             // Game scene start
             sampleMap = Textures::shared_instance().get("sampleMap");
             player = Player();
+            //enemy = Enemy();
             break;
         default:
             break;
@@ -32,6 +36,13 @@ void Update() {
             // Game scene update
 
             player.Update();
+            //enemy.Update(player.GetPosition());
+
+            for (auto &&projec : Textures::shared_instance().GetProjectiles())
+            {
+                projec.Update();
+            }
+            
 
             break;
         default:
@@ -46,7 +57,14 @@ void Draw() {
 
             DrawTexture(sampleMap, 0, 0, WHITE);
 
+            //enemy.Draw();
             player.Draw();
+
+            for (auto &&projec : Textures::shared_instance().GetProjectiles())
+            {
+                projec.Draw();
+            }
+
             DrawFPS(0,0);
             break;
         default:

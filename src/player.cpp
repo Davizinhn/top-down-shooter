@@ -2,10 +2,11 @@
 #include <raylib.h>
 #include "hand.hpp"
 #include "global.hpp"
+#include <math.h>
 
 Player::Player(bool dontLoad)
 {
-    position = {100, 100};
+    position = {300, 300};
     if(!dontLoad) {
         sprite = Textures::shared_instance().get("body");
     }
@@ -17,7 +18,6 @@ Player::Player(bool dontLoad)
 void Player::Update()
 {
     #pragma region Movement Logic
-    // Movement logic
     if(IsKeyDown(KEY_W)) {
         curVelocity.y-=moveSpeed;
     } if(IsKeyDown(KEY_S)) {
@@ -38,8 +38,10 @@ void Player::Update()
 
     hand.Move(position, col, center);
 
+    hand.Update();
+
     if(IsKeyPressed(KEY_C)) {
-        hand.ChangeWeapon(hand.curWeapon == HANDS ? SWORD : HANDS);
+        hand.ChangeWeapon(hand.curWeapon == HANDS ? BOW : HANDS);
     }
 }
 
