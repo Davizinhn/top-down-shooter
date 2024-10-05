@@ -48,6 +48,9 @@ void Player::Update()
 void Player::Draw()
 {
     DrawTexturePro(sprite, col, Rectangle({position.x, position.y, (float)sprite.width, (float)sprite.height}), center, 0, WHITE);
+    if(Textures::shared_instance().DEBUG) {
+        DrawRectangleLinesEx(GetRectangle(), 3, BLACK);
+    }
     hand.Draw();
 }
 
@@ -58,4 +61,8 @@ float Player::Clamp(float n, float lower, float upper) {
 
 Vector2 Player::GetPosition() {
     return position;
+}
+
+Rectangle Player::GetRectangle() {
+    return {position.x-center.x, position.y-center.y, (float)sprite.width, (float)sprite.height};
 }

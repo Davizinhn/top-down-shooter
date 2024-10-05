@@ -12,6 +12,7 @@ enum Weapon {HANDS, SWORD, BOW};
 class Textures
 {
     public:
+        bool DEBUG = false;
         static Textures &shared_instance() {static Textures textures; return textures;}
         map<string, Texture2D> list;
         void LoadAll();
@@ -23,6 +24,8 @@ class Textures
         vector<Projectile> projectiles;
         vector<Enemy> enemies;
         bool CheckCollisionPolygons(const vector<Vector2>&, const vector<Vector2>&);
+        float RandomFloat(float, float);
+        Vector2 RandomVector2(Vector2, Vector2);
     private:
         Textures();
 };

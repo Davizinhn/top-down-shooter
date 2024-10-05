@@ -1,6 +1,7 @@
 #pragma once
 #include <raylib.h>
 #include "global.hpp"
+#include <algorithm>
 
 class Hand
 {
@@ -13,6 +14,8 @@ public:
     Weapon curWeapon = SWORD;
     Vector2 position;
     bool attacking;
+    Rectangle GetRectangle();
+    vector<Vector2> GetRotatedRectangle();
 
 private:
     Rectangle col;
@@ -31,4 +34,8 @@ private:
     int maxFrames = 0;
     bool animating = false;
     float xOffset = 0;
+    float yOffset = 0;
+
+    int colHeight = 0;
+    int colWidth = 0;
 };

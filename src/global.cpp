@@ -121,3 +121,12 @@ bool Textures::CheckCollisionPolygons(const vector<Vector2>& poly1, const vector
 
     return true;
 }
+
+float Textures::RandomFloat(float min, float max) {
+    float r = (float)rand() / (float)RAND_MAX;
+    return min + r * (max - min);
+}
+
+Vector2 Textures::RandomVector2(Vector2 min, Vector2 max) {
+    return Vector2({RandomFloat(min.x, max.x), RandomFloat(min.y, max.y)});
+}

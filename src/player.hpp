@@ -10,6 +10,7 @@ public:
     void Draw();
     Vector2 GetPosition();
     Hand hand = Hand(true);
+    Rectangle GetRectangle();
 
 private:
     Vector2 position;

@@ -10,6 +10,7 @@ using namespace std;
 Projectile::Projectile(Vector2 pos, float ang, float vel, string tex)
 {
     position = pos;
+    initialPos = pos;
     angle = ang;
     velocity = vel;
     sprite = Textures::shared_instance().get(tex);
@@ -26,10 +27,12 @@ void Projectile::Update()
 void Projectile::Draw()
 {
     DrawTexturePro(sprite, col, Rectangle({position.x, position.y, (float)sprite.width, (float)sprite.height}), center, angle * (180 / PI), WHITE);
-    /*auto vertices = GetRotatedRectangle();
-    for (int i = 0; i < 4; ++i) {
-        DrawLineV(vertices[i], vertices[(i+1) % 4], BLACK);
-    }*/
+    if(Textures::shared_instance().DEBUG) {
+        auto vertices = GetRotatedRectangle();
+        for (int i = 0; i < 4; ++i) {
+            DrawLineV(vertices[i], vertices[(i+1) % 4], BLACK);
+        }
+    }
 }
 
 Vector2 Projectile::GetPosition() {

@@ -1,11 +1,14 @@
 #pragma once
 #include <raylib.h>
+#include <vector>
+
+using namespace std;
 
 class Enemy
 {
     public:
-        Enemy(bool=false);
-        void Update(Vector2);
+        Enemy(Vector2);
+        void Update(Vector2, Rectangle);
         void Draw();
         Vector2 GetPosition();
         int life = 3;

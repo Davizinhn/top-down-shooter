@@ -13,6 +13,7 @@ class Projectile
         void Draw();
         Vector2 GetPosition();
         vector<Vector2> GetRotatedRectangle();
+        Vector2 initialPos;
 
     private:
         Rectangle col;

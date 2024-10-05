@@ -24,7 +24,9 @@ void ChangeScene(SceneState newScene) {
             // Game scene start
             sampleMap = Textures::shared_instance().get("sampleMap");
             player = Player();
-            Textures::shared_instance().SpawnEnemy({});
+            for(int i = 0; i < 10; i++) {
+                Textures::shared_instance().SpawnEnemy({Textures::shared_instance().RandomVector2({0,0}, {800,600})});
+            }
             break;
         default:
             break;
@@ -47,7 +49,12 @@ void ProjectileCollision() {
             if (Textures::shared_instance().CheckCollisionPolygons(enemyPolygon, projectilePolygon)) {
                 Textures::shared_instance().enemies.erase(Textures::shared_instance().enemies.begin() + j);
                 Textures::shared_instance().projectiles.erase(Textures::shared_instance().projectiles.begin() + i);
+                break;
             }
+        }
+
+        if(Vector2Distance(Textures::shared_instance().projectiles[i].initialPos, Textures::shared_instance().projectiles[i].GetPosition()) > 900) {
+            Textures::shared_instance().projectiles.erase(Textures::shared_instance().projectiles.begin() + i);
         }
     }
 }
@@ -61,7 +68,7 @@ void Update() {
             
             for (auto &&enemy : Textures::shared_instance().enemies) 
             {
-                enemy.Update(player.GetPosition());
+                enemy.Update(player.GetPosition(), player.GetRectangle());
             }
 
             for (auto &&projec : Textures::shared_instance().projectiles)
@@ -96,6 +103,11 @@ void Draw() {
             }
 
             DrawFPS(0,0);
+
+            if(Textures::shared_instance().DEBUG) {
+                DrawText(TextFormat("Enemies: %06i", Textures::shared_instance().enemies.size()), 0, 30, 20, BLACK);
+                DrawText(TextFormat("Projectiles: %06i", Textures::shared_instance().projectiles.size()), 0, 60, 20, BLACK);
+            }
             break;
         default:
             break;

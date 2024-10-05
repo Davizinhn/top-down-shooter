@@ -3,6 +3,9 @@
 #include <math.h>
 #include <iostream>
 #include "global.hpp"
+#include <math.h>
+#include <raymath.h>
+#include <algorithm>
 
 Hand::Hand(bool dontLoad)
 {
@@ -62,6 +65,24 @@ void Hand::Animate() {
 
         col.x = (float)currentFrame*(float)sprite.width/maxFrames;
     }
+
+    if(curWeapon == SWORD) {
+        for (int i = 0; i < (int)Textures::shared_instance().enemies.size(); i++)
+        {
+            Rectangle enemyRect = Textures::shared_instance().enemies[i].GetRectangle();
+            vector<Vector2> enemyPolygon = {
+                { enemyRect.x, enemyRect.y },
+                { enemyRect.x + enemyRect.width, enemyRect.y },
+                { enemyRect.x + enemyRect.width, enemyRect.y + enemyRect.height },
+                { enemyRect.x, enemyRect.y + enemyRect.height }
+            };
+
+            if (Textures::shared_instance().CheckCollisionPolygons(enemyPolygon, GetRotatedRectangle())) {
+                Textures::shared_instance().enemies.erase(Textures::shared_instance().enemies.begin() + i);
+                break;
+            }
+        }
+    }
 }
 
 void Hand::InitTimer(float time) {
@@ -88,6 +109,9 @@ void Hand::ChangeWeapon(Weapon newWeapon) {
             framesSpeed = 30;
             maxFrames = 7;
             xOffset = -10;
+            colHeight = 20;
+            colWidth = 31;
+            yOffset=20;
             break;
         case BOW:
             sprite = Textures::shared_instance().get("bow_animated");
@@ -106,4 +130,40 @@ void Hand::ChangeWeapon(Weapon newWeapon) {
 void Hand::Draw() 
 {
     DrawTexturePro(sprite, col, Rectangle({position.x, position.y, (float)sprite.width/maxFrames, (float)sprite.height}), center, angle * (180 / PI), WHITE);
+
+    if(Textures::shared_instance().DEBUG) {
+        auto vertices = GetRotatedRectangle();
+        for (int i = 0; i < 4; ++i) {
+            DrawLineV(vertices[i], vertices[(i+1) % 4], BLACK);
+        }
+    }
+
+}
+
+Rectangle Hand::GetRectangle() {
+    return {position.x-center.x, position.y-center.y, (float)sprite.width/maxFrames, (float)sprite.height};
+}
+
+vector<Vector2> Hand::GetRotatedRectangle() {
+    std::vector<Vector2> vertices(4);
+
+    float width = (float)colWidth;
+    float height = (float)colHeight;
+
+    Vector2 offsetCenter = {(float)colWidth-yOffset, (float)colHeight+xOffset};
+
+    Vector2 corners[4] = {
+        {-offsetCenter.x, -offsetCenter.y},
+        {width - offsetCenter.x, -offsetCenter.y},
+        {width - offsetCenter.x, height - offsetCenter.y},
+        {-offsetCenter.x, height - offsetCenter.y}
+    };
+
+    for (int i = 0; i < 4; ++i) {
+        vertices[i] = Vector2Rotate(corners[i], angle);
+        vertices[i].x += position.x;
+        vertices[i].y += position.y;
+    }
+
+    return vertices;
 }
