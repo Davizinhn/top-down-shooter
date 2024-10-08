@@ -11,6 +11,7 @@ Enemy::Enemy(Vector2 pos)
     sprite = Textures::shared_instance().get("body");
     col = {0, 0, (float)sprite.width, (float)sprite.height};
     center = {(float)sprite.width/2, (float)sprite.height/2};
+    moveSpeed = GetRandomValue(1, 3);
 }
 
 void Enemy::Update(Vector2 playerPosition, Rectangle playerRect)

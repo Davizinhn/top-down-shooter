@@ -3,8 +3,8 @@
         {
             "name": "windows-gcc-x64",
             "includePath": [
-                "${workspaceFolder}/**",
-                "C:\\raylib\\raylib\\src\\",
+                "e:/Projetos/C++/top-down-shooter/**",
+                "C:/raylib/raylib/src\\",
                 "C:/raylib/raylib/src/external"
             ],
             "defines": [
@@ -14,11 +14,23 @@
                 "GRAPHICS_API_OPENGL_33",
                 "PLATFORM_DESKTOP"
             ],
-            "compilerPath": "gcc",
-            "cStandard": "${default}",
+            "compilerPath": "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/Llvm/x64/bin/clang++.exe",
             "cppStandard": "c++17",
             "intelliSenseMode": "windows-gcc-x64",
-            "configurationProvider": "ms-vscode.makefile-tools"
+            "configurationProvider": "ms-vscode.makefile-tools",
+            "compilerPathInCppPropertiesJson": "gcc",
+            "configurationProviderInCppPropertiesJson": "ms-vscode.makefile-tools",
+            "mergeConfigurations": false,
+            "browse": {
+                "path": [
+                    "e:/Projetos/C++/top-down-shooter/**",
+                    "C:/raylib/raylib/src\\",
+                    "C:/raylib/raylib/src/external",
+                    "${workspaceFolder}"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            },
+            "cStandard": "c23"
         },
         {
             "name": "Mac",
@@ -44,8 +56,9 @@
         {
             "name": "Linux",
             "includePath": [
-                "/home/linuxbrew/.linuxbrew/include",
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "C:\\raylib\\raylib\\src",
+                "C:/raylib/raylib/src/external"
             ],
             "defines": [
                 "_DEBUG",
@@ -56,7 +69,7 @@
             ],
             "cStandard": "c11",
             "cppStandard": "c++14",
-            "intelliSenseMode": "gcc-x64"
+            "intelliSenseMode": "clang-x64"
         }
     ],
     "version": 4

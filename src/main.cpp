@@ -13,6 +13,10 @@ SceneState curScene = INIT;
 Player player = Player(true);
 Texture2D sampleMap;
 
+Rectangle cRect;
+Texture2D cursor;
+
+
 void ChangeScene(SceneState newScene) {
     if(curScene == newScene)
         return;
@@ -24,9 +28,15 @@ void ChangeScene(SceneState newScene) {
             // Game scene start
             sampleMap = Textures::shared_instance().get("sampleMap");
             player = Player();
-            for(int i = 0; i < 10; i++) {
-                Textures::shared_instance().SpawnEnemy({Textures::shared_instance().RandomVector2({0,0}, {800,600})});
+            for(int i = 0; i < GetRandomValue(1,60); i++) {
+                Textures::shared_instance().SpawnEnemy({Textures::shared_instance().RandomVector2({1000,0}, {1000,600})});
             }
+            for(int i = 0; i < GetRandomValue(1,60); i++) {
+                Textures::shared_instance().SpawnEnemy({Textures::shared_instance().RandomVector2({0,1000}, {800,1000})});
+            }
+            cursor = Textures::shared_instance().get("cursor");
+            cRect = {0, 0, (float)cursor.width, (float)cursor.height};
+            HideCursor();
             break;
         default:
             break;
@@ -108,6 +118,9 @@ void Draw() {
                 DrawText(TextFormat("Enemies: %06i", Textures::shared_instance().enemies.size()), 0, 30, 20, BLACK);
                 DrawText(TextFormat("Projectiles: %06i", Textures::shared_instance().projectiles.size()), 0, 60, 20, BLACK);
             }
+
+            DrawTexturePro(cursor, cRect, {GetMousePosition().x, GetMousePosition().y, cRect.width, cRect.height}, {cRect.width/2, cRect.height/2}, 0, WHITE);
+
             break;
         default:
             break;

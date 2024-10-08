@@ -44,7 +44,7 @@ Textures::Textures() {
 }
 
 void Textures::LoadAll() {
-    vector<string> folders = {"resources/items/", "resources/player/", "resources/scenary/"};
+    vector<string> folders = {"resources/items/", "resources/player/", "resources/scenary/", "resources/"};
     vector<string> fileList;
     for(int j = 0; j < (int)folders.size(); j++) {
         fileList = getDirectoryFiles(folders[j], {".png"});

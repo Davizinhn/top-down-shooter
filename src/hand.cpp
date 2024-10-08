@@ -66,7 +66,7 @@ void Hand::Animate() {
         col.x = (float)currentFrame*(float)sprite.width/maxFrames;
     }
 
-    if(curWeapon == SWORD) {
+    if(curWeapon == SWORD && currentFrame > 2) {
         for (int i = 0; i < (int)Textures::shared_instance().enemies.size(); i++)
         {
             Rectangle enemyRect = Textures::shared_instance().enemies[i].GetRectangle();
