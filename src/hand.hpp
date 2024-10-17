@@ -11,7 +11,7 @@ public:
     void Move(Vector2, Rectangle, Vector2);
     void Draw();
     void ChangeWeapon(Weapon);
-    Weapon curWeapon = SWORD;
+    Weapon curWeapon = HANDS;
     Vector2 position;
     bool attacking;
     Rectangle GetRectangle();

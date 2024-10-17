@@ -40,6 +40,8 @@ vector<string> getDirectoryFiles(const string& directoryPath, const vector<strin
     return fileList;
 }
 
+// textures uwu
+
 Textures::Textures() {
 }
 
@@ -129,4 +131,93 @@ float Textures::RandomFloat(float min, float max) {
 
 Vector2 Textures::RandomVector2(Vector2 min, Vector2 max) {
     return Vector2({RandomFloat(min.x, max.x), RandomFloat(min.y, max.y)});
+}
+
+// sounds :3
+
+Sounds::Sounds() {
+}
+
+void Sounds::LoadAll() {
+    vector<string> folders = {"resources/sounds/"};
+    vector<string> fileList;
+    for(int j = 0; j < (int)folders.size(); j++) {
+        fileList = getDirectoryFiles(folders[j], {".wav"});
+        for(int i = 0; i<(int)fileList.size(); i++) {
+            vector<string> splittedString = Textures::shared_instance().SplitString(fileList[i], "/");
+            list[(regex_replace(splittedString[(int)splittedString.size()-1], regex("\\.wav"), ""))] = LoadSound(fileList[i].c_str());
+        }
+    }
+    vector<string> foldersMusic = {"resources/sounds/music/"};
+    vector<string> fileListMusic;
+    for(int j = 0; j < (int)foldersMusic.size(); j++) {
+        fileListMusic = getDirectoryFiles(foldersMusic[j], {".wav"});
+        for(int i = 0; i<(int)fileListMusic.size(); i++) {
+            vector<string> splittedString = Textures::shared_instance().SplitString(fileListMusic[i], "/");
+            musicList[(regex_replace(splittedString[(int)splittedString.size()-1], regex("\\.wav"), ""))] = LoadMusicStream(fileListMusic[i].c_str());
+        }
+    }
+}
+
+void Sounds::UnloadAll() {
+    for (const auto& kv : list) {
+        UnloadSound(kv.second);
+    }
+    for (const auto& kv : musicList) {
+        UnloadMusicStream(kv.second);
+    }
+}
+
+Sound Sounds::get(string name) {
+    return list[name];
+}
+
+Music Sounds::getMusic(string name) {
+    return musicList[name];
+}
+
+// GAME MANAGER owo
+
+GameManager::GameManager() {
+}
+
+void GameManager::Update() {
+    if(Textures::shared_instance().enemies.size() == 0 && timeBetweenLevels > 0) {
+        timeBetweenLevels--;
+        if(timeBetweenLevels == 0) canProceed = true;
+    }
+
+    if(timeBetweenLevels == 0 && canProceed) {
+        NextLevel();
+    }
+}
+
+int GameManager::GetCurrentLevel() {
+    return curLevel;
+}
+
+void GameManager::NextLevel() {
+    canProceed = false;
+    curLevel++;
+    levelEnemy += GetRandomValue(minIncrementValue, maxIncrementValue);
+    for(int i = 0; i < levelEnemy/2; i++) {
+        Textures::shared_instance().SpawnEnemy({Textures::shared_instance().RandomVector2({1000,0}, {1000,600})});
+    }
+    for(int i = 0; i < levelEnemy/2; i++) {
+        Textures::shared_instance().SpawnEnemy({Textures::shared_instance().RandomVector2({0,1000}, {800,1000})});
+    }
+    timeBetweenLevels = defaultTime;
+    PlaySound(Sounds::shared_instance().get("nextLevel"));
+}
+
+void GameManager::Reset() {
+    Textures::shared_instance().enemies = vector<Enemy>();
+    Textures::shared_instance().projectiles = vector<Projectile>();
+    curLevel = 0;
+    timeBetweenLevels = 200;
+    defaultTime = 200;
+    minIncrementValue = 2;
+    maxIncrementValue = 6;
+    levelEnemy = 5;
+    canProceed = false;
 }

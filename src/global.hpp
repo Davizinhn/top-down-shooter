@@ -29,3 +29,36 @@ class Textures
     private:
         Textures();
 };
+
+class Sounds
+{
+    public:
+        static Sounds &shared_instance() {static Sounds sounds; return sounds;}
+        map<string, Sound> list;
+        map<string, Music> musicList;
+        void LoadAll();
+        void UnloadAll();
+        Sound get(string);
+        Music getMusic(string);
+    private:
+        Sounds();
+};
+
+class GameManager
+{
+    public:
+        static GameManager &shared_instance() {static GameManager gameManager; return gameManager;}
+        void Update();
+        int GetCurrentLevel();
+        void Reset();
+    private:
+        GameManager();
+        int curLevel = 0;
+        void NextLevel();
+        int timeBetweenLevels = 0;
+        int defaultTime = 100;
+        int minIncrementValue = 2;
+        int maxIncrementValue = 6;
+        int levelEnemy = 5;
+        bool canProceed = false;
+};

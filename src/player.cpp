@@ -43,11 +43,13 @@ void Player::Update()
     if(IsKeyPressed(KEY_C)) {
         hand.ChangeWeapon(hand.curWeapon == BOW ? SWORD : BOW);
     }
+    if(stunTime > 0) stunTime--;
+    canTakeDamage = stunTime == 0;
 }
 
 void Player::Draw()
 {
-    DrawTexturePro(sprite, col, Rectangle({position.x, position.y, (float)sprite.width, (float)sprite.height}), center, 0, WHITE);
+    DrawTexturePro(sprite, col, Rectangle({position.x, position.y, (float)sprite.width, (float)sprite.height}), center, 0, stunTime > 0 ? RED : WHITE);
     if(Textures::shared_instance().DEBUG) {
         DrawRectangleLinesEx(GetRectangle(), 3, BLACK);
     }
@@ -65,4 +67,16 @@ Vector2 Player::GetPosition() {
 
 Rectangle Player::GetRectangle() {
     return {position.x-center.x, position.y-center.y, (float)sprite.width, (float)sprite.height};
+}
+
+void Player::TakeDamage() {
+    if(!canTakeDamage)
+        return;
+    stunTime = 10;
+    lives--;
+    PlaySound(Sounds::shared_instance().get("playerDamage"));
+}
+
+int Player::GetLives() {
+    return lives;
 }

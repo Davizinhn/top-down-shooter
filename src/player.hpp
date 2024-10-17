@@ -11,6 +11,8 @@ public:
     Vector2 GetPosition();
     Hand hand = Hand(true);
     Rectangle GetRectangle();
+    int GetLives();
+    void TakeDamage();
 
 private:
     Vector2 position;
@@ -20,4 +22,7 @@ private:
     float moveSpeed = 5;
     Vector2 curVelocity = {0, 0};
     float Clamp(float, float, float);
+    int lives = 3;
+    bool canTakeDamage = true;
+    int stunTime = 0;
 };

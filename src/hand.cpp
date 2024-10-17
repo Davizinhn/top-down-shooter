@@ -16,6 +16,7 @@ Hand::Hand(bool dontLoad)
     }
     col = {0, 0, (float)sprite.width/maxFrames, (float)sprite.height};
     center = {(float)sprite.width/maxFrames/2, (float)sprite.height/2};
+    ChangeWeapon(SWORD);
 }
 
 void Hand::Update()
@@ -31,6 +32,7 @@ void Hand::Update()
                 framesCounter = 0;
                 currentFrame = 0;
                 animating = true;
+                PlaySound(Sounds::shared_instance().get("sword"));
             }
             break;
         case BOW:
@@ -40,6 +42,7 @@ void Hand::Update()
                 currentFrame = 0;
                 animating = true;
                 Textures::shared_instance().SpawnProjectile(Projectile({position, angle, 14, "arrow"}));
+                PlaySound(Sounds::shared_instance().get("shoot"));
             }
             break;
         default:
@@ -79,6 +82,7 @@ void Hand::Animate() {
 
             if (Textures::shared_instance().CheckCollisionPolygons(enemyPolygon, GetRotatedRectangle())) {
                 Textures::shared_instance().enemies.erase(Textures::shared_instance().enemies.begin() + i);
+                PlaySound(Sounds::shared_instance().get("enemyDie"));
                 break;
             }
         }

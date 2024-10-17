@@ -41,17 +41,6 @@ void Enemy::Update(Vector2 playerPosition, Rectangle playerRect)
             position.y += separationDirection.y * (minDistance - distance) / 2;
         }
     }
-
-    if (CheckCollisionRecs(GetRectangle(), playerRect)) {
-        Vector2 separationDirection = {position.x - playerPosition.x, position.y - playerPosition.y};
-        float separationMagnitude = sqrt(separationDirection.x * separationDirection.x + separationDirection.y * separationDirection.y);
-        if (separationMagnitude > 0) {
-            separationDirection.x /= separationMagnitude;
-            separationDirection.y /= separationMagnitude;
-        }
-        position.x += separationDirection.x * moveSpeed;
-        position.y += separationDirection.y * moveSpeed;
-    }
 }
 
 void Enemy::Draw()

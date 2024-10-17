@@ -6,7 +6,7 @@
 #include <vector>
 #include <raymath.h>
 
-enum SceneState {INIT, GAME};
+enum SceneState {INIT, MAINMENU, GAME, GAMEOVER};
 
 SceneState curScene = INIT;
 
@@ -15,7 +15,9 @@ Texture2D sampleMap;
 
 Rectangle cRect;
 Texture2D cursor;
+Texture2D heartTexture;
 
+Music curMusic;
 
 void ChangeScene(SceneState newScene) {
     if(curScene == newScene)
@@ -28,15 +30,18 @@ void ChangeScene(SceneState newScene) {
             // Game scene start
             sampleMap = Textures::shared_instance().get("sampleMap");
             player = Player();
-            for(int i = 0; i < GetRandomValue(1,60); i++) {
-                Textures::shared_instance().SpawnEnemy({Textures::shared_instance().RandomVector2({1000,0}, {1000,600})});
-            }
-            for(int i = 0; i < GetRandomValue(1,60); i++) {
-                Textures::shared_instance().SpawnEnemy({Textures::shared_instance().RandomVector2({0,1000}, {800,1000})});
-            }
             cursor = Textures::shared_instance().get("cursor");
             cRect = {0, 0, (float)cursor.width, (float)cursor.height};
+            heartTexture = Textures::shared_instance().get("heart");
+            GameManager::shared_instance().Reset();
             HideCursor();
+            curMusic = Sounds::shared_instance().getMusic("music"+to_string(GetRandomValue(1, 5)));
+            PlayMusicStream(curMusic);
+            break;
+        case GAMEOVER:
+            PlaySound(Sounds::shared_instance().get("playerDie"));
+            StopMusicStream(curMusic);
+            ShowCursor();
             break;
         default:
             break;
@@ -59,6 +64,7 @@ void ProjectileCollision() {
             if (Textures::shared_instance().CheckCollisionPolygons(enemyPolygon, projectilePolygon)) {
                 Textures::shared_instance().enemies.erase(Textures::shared_instance().enemies.begin() + j);
                 Textures::shared_instance().projectiles.erase(Textures::shared_instance().projectiles.begin() + i);
+                PlaySound(Sounds::shared_instance().get("enemyDie"));
                 break;
             }
         }
@@ -67,12 +73,22 @@ void ProjectileCollision() {
             Textures::shared_instance().projectiles.erase(Textures::shared_instance().projectiles.begin() + i);
         }
     }
+
+    for (int j = 0; j < (int)Textures::shared_instance().enemies.size(); j++) {
+        Enemy curEnemy = Textures::shared_instance().enemies[j];
+        if(CheckCollisionRecs(curEnemy.GetRectangle(), player.GetRectangle())) {
+            Textures::shared_instance().enemies.erase(Textures::shared_instance().enemies.begin() + j);
+            player.TakeDamage();
+        }
+    }
 }
 
 void Update() {
     switch(curScene) { 
         case GAME:
             // Game scene update
+
+            UpdateMusicStream(curMusic);
 
             player.Update();
             
@@ -87,7 +103,22 @@ void Update() {
             }
 
             ProjectileCollision();
+            GameManager::shared_instance().Update();
 
+            if(player.GetLives() < 1) {
+                ChangeScene(GAMEOVER);
+            }
+
+            break;
+        case GAMEOVER:
+            if(IsKeyPressed(KEY_R)) {
+                ChangeScene(GAME);
+            }
+            break;
+        case MAINMENU:
+            if(GetKeyPressed()) {
+                ChangeScene(GAME);
+            }
             break;
         default:
             break;
@@ -112,15 +143,28 @@ void Draw() {
                 projec.Draw();
             }
 
-            DrawFPS(0,0);
+            for(int i = 0; i<player.GetLives(); i++) {
+                DrawTexture(heartTexture, 10+(i*35), 10, WHITE);
+            }
 
             if(Textures::shared_instance().DEBUG) {
                 DrawText(TextFormat("Enemies: %06i", Textures::shared_instance().enemies.size()), 0, 30, 20, BLACK);
                 DrawText(TextFormat("Projectiles: %06i", Textures::shared_instance().projectiles.size()), 0, 60, 20, BLACK);
             }
 
+            DrawText(TextFormat("Level: %02i", GameManager::shared_instance().GetCurrentLevel()), 2, GetScreenHeight()-20, 20, BLACK);
+
             DrawTexturePro(cursor, cRect, {GetMousePosition().x, GetMousePosition().y, cRect.width, cRect.height}, {cRect.width/2, cRect.height/2}, 0, WHITE);
 
+            break;
+        case GAMEOVER:
+            DrawText(TextFormat("Levels Survived: %02i", GameManager::shared_instance().GetCurrentLevel() > 0 ? GameManager::shared_instance().GetCurrentLevel()-1 : 0), 20, 55, 35, WHITE);
+            DrawText("GAME OVER", 20, 20, 35, WHITE);
+            DrawText("Press R to retry", 20, GetScreenHeight()-45, 35, WHITE);
+            break;
+        case MAINMENU:
+            DrawText("Top-Down Shooter", 20, 20, 35, WHITE);
+            DrawText("Press anything to play", 20, GetScreenHeight()-45, 35, WHITE);
             break;
         default:
             break;
@@ -133,9 +177,11 @@ int main()
     const int screenHeight = 600;
 
     InitWindow(screenWidth, screenHeight, "Top-Down Shooter");
+    InitAudioDevice();
     SetTargetFPS(60);
     Textures::shared_instance().LoadAll();
-    ChangeScene(GAME);
+    Sounds::shared_instance().LoadAll();
+    ChangeScene(MAINMENU);
     while (!WindowShouldClose())
     {
         Update();
@@ -145,6 +191,7 @@ int main()
         EndDrawing();
     }
     Textures::shared_instance().UnloadAll();
+    CloseAudioDevice();
     CloseWindow();
     return 0;
 }
