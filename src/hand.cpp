@@ -37,7 +37,7 @@ void Hand::Update()
             break;
         case BOW:
             if(IsMouseButtonPressed(0) && canAttack) {
-                InitTimer(0.3);
+                InitTimer(0.2);
                 framesCounter = 0;
                 currentFrame = 0;
                 animating = true;
@@ -94,7 +94,9 @@ void Hand::InitTimer(float time) {
 }
 
 void Hand::Move(Vector2 pos, Rectangle col, Vector2 center) {
-    angle = atan2(GetMousePosition().y - pos.y, GetMousePosition().x - pos.x);
+    Vector2 mouseWorld = GetScreenToWorld2D(GetMousePosition(), GameManager::shared_instance().camera);
+
+    angle = atan2(mouseWorld.y - pos.y, mouseWorld.x - pos.x);
     float orbitRadius = 30 +(5)*(sprite.width/maxFrames/10)+xOffset;
     position = {pos.x + orbitRadius * cos(angle), pos.y + orbitRadius * sin(angle)};
 }

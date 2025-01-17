@@ -6,13 +6,14 @@ class Player
 {
 public:
     Player(bool=false);
-    void Update();
+    void Update(Vector2 minPos, Vector2 maxPos);
     void Draw();
     Vector2 GetPosition();
     Hand hand = Hand(true);
     Rectangle GetRectangle();
     int GetLives();
     void TakeDamage();
+    void SetPosition(Vector2 pos);
 
 private:
     Vector2 position;

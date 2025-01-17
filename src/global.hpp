@@ -6,6 +6,7 @@
 #include "projectile.hpp"
 #include <vector>
 #include "enemy.hpp"
+
 using namespace std;
 
 enum Weapon {HANDS, SWORD, BOW};
@@ -51,6 +52,9 @@ class GameManager
         void Update();
         int GetCurrentLevel();
         void Reset();
+        Camera2D camera = { 0 };
+        float GetMapScale();
+        Vector2 playerPos;
     private:
         GameManager();
         int curLevel = 0;
@@ -61,4 +65,15 @@ class GameManager
         int maxIncrementValue = 6;
         int levelEnemy = 5;
         bool canProceed = false;
+        float mapScale = 5;
+};
+
+class Utils
+{
+    public:
+        static Utils &shared_instance() {static Utils utils; return utils;}
+        Vector2 Vector2Lerp(Vector2, Vector2, float);
+        Color RandomDesaturatedColor();
+    private:
+        Utils();
 };

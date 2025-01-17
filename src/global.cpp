@@ -8,6 +8,7 @@
 #include <cstring>
 #include <regex>
 #include <raymath.h>
+#include "player.hpp"
 
 vector<string> getDirectoryFiles(const string& directoryPath, const vector<string>& extensions) {
     vector<string> fileList;
@@ -200,12 +201,22 @@ void GameManager::NextLevel() {
     canProceed = false;
     curLevel++;
     levelEnemy += GetRandomValue(minIncrementValue, maxIncrementValue);
-    for(int i = 0; i < levelEnemy/2; i++) {
-        Textures::shared_instance().SpawnEnemy({Textures::shared_instance().RandomVector2({1000,0}, {1000,600})});
+
+    float minRadius = 1200.0f;
+    float maxRadius = 2000.0f;
+    
+    for(int i = 0; i < levelEnemy; i++) {
+        float angle = Textures::shared_instance().RandomFloat(0, 2 * PI);
+        float radius = Textures::shared_instance().RandomFloat(minRadius, maxRadius);
+        
+        Vector2 spawnPos = {
+            playerPos.x + radius * cosf(angle),
+            playerPos.y + radius * sinf(angle)
+        };
+        
+        Textures::shared_instance().SpawnEnemy({spawnPos});
     }
-    for(int i = 0; i < levelEnemy/2; i++) {
-        Textures::shared_instance().SpawnEnemy({Textures::shared_instance().RandomVector2({0,1000}, {800,1000})});
-    }
+    
     timeBetweenLevels = defaultTime;
     PlaySound(Sounds::shared_instance().get("nextLevel"));
 }
@@ -220,4 +231,40 @@ void GameManager::Reset() {
     maxIncrementValue = 6;
     levelEnemy = 5;
     canProceed = false;
+}
+
+float GameManager::GetMapScale() {
+    return mapScale;
+}
+
+
+Utils::Utils() {
+}
+
+Vector2 Utils::Vector2Lerp(Vector2 v1, Vector2 v2, float t) {
+    Vector2 result = {0, 0};
+    result.x = Lerp(v1.x, v2.x, t);
+    result.y = Lerp(v1.y, v2.y, t);
+
+    return result;
+}
+
+Color Utils::RandomDesaturatedColor() {
+    float h = GetRandomValue(0, 360);
+    float s = GetRandomValue(10, 20) / 100.0f;
+    float v = GetRandomValue(85, 95) / 100.0f;
+
+    float c = v * s;
+    float x = c * (1 - fabs(fmod(h / 60.0f, 2) - 1));
+    float m = v - c;
+
+    float r, g, b;
+    if (h < 60) { r = c; g = x; b = 0; }
+    else if (h < 120) { r = x; g = c; b = 0; }
+    else if (h < 180) { r = 0; g = c; b = x; }
+    else if (h < 240) { r = 0; g = x; b = c; }
+    else if (h < 300) { r = x; g = 0; b = c; }
+    else { r = c; g = 0; b = x; }
+
+    return {(unsigned char)((r + m) * 255), (unsigned char)((g + m) * 255), (unsigned char)((b + m) * 255), 255};
 }

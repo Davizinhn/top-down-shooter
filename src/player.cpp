@@ -15,7 +15,7 @@ Player::Player(bool dontLoad)
     hand = Hand(dontLoad);
 }
 
-void Player::Update()
+void Player::Update(Vector2 minPos, Vector2 maxPos)
 {
     #pragma region Movement Logic
     if(IsKeyDown(KEY_W)) {
@@ -32,6 +32,9 @@ void Player::Update()
     curVelocity = {Clamp(curVelocity.x, -clampValue, clampValue), Clamp(curVelocity.y, -clampValue, clampValue)};
 
     position = {position.x+curVelocity.x, position.y+curVelocity.y};
+
+    position.x = Clamp(position.x, minPos.x, maxPos.x - sprite.width);
+    position.y = Clamp(position.y, minPos.y, maxPos.y - sprite.height);
 
     curVelocity = {0, 0};
     #pragma endregion
@@ -63,6 +66,10 @@ float Player::Clamp(float n, float lower, float upper) {
 
 Vector2 Player::GetPosition() {
     return position;
+}
+
+void Player::SetPosition(Vector2 pos) {
+    position = pos;
 }
 
 Rectangle Player::GetRectangle() {
