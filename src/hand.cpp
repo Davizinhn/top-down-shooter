@@ -21,13 +21,14 @@ Hand::Hand(bool dontLoad)
 
 void Hand::Update()
 {
+    bool attackInput = IsMouseButtonPressed(0) || IsKeyPressed(KEY_SPACE);
     curTimer = GetTime();
     float remainingTime = endTimer - curTimer;
     canAttack = remainingTime <= 0;
     switch (curWeapon)
     {
         case SWORD:
-            if(IsMouseButtonPressed(0) && canAttack) {
+            if(attackInput && canAttack) {
                 InitTimer(0.3);
                 framesCounter = 0;
                 currentFrame = 0;
@@ -36,7 +37,7 @@ void Hand::Update()
             }
             break;
         case BOW:
-            if(IsMouseButtonPressed(0) && canAttack) {
+            if(attackInput && canAttack) {
                 InitTimer(0.2);
                 framesCounter = 0;
                 currentFrame = 0;
