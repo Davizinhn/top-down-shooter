@@ -48,11 +48,15 @@ void Player::Update(Vector2 minPos, Vector2 maxPos)
     }
     if(stunTime > 0) stunTime--;
     canTakeDamage = stunTime == 0;
+
+    regenTime+=1;
+    //std::cout<<regenTime<<std::endl;
+    Regen();
 }
 
 void Player::Draw()
 {
-    DrawTexturePro(sprite, col, Rectangle({position.x, position.y, (float)sprite.width, (float)sprite.height}), center, 0, stunTime > 0 ? RED : WHITE);
+    DrawTexturePro(sprite, col, Rectangle({position.x, position.y, (float)sprite.width, (float)sprite.height}), center, 0, stunTime % 5 != 0 ? RED : WHITE);
     if(Textures::shared_instance().DEBUG) {
         DrawRectangleLinesEx(GetRectangle(), 3, BLACK);
     }
@@ -79,11 +83,23 @@ Rectangle Player::GetRectangle() {
 void Player::TakeDamage() {
     if(!canTakeDamage)
         return;
-    stunTime = 10;
+    regenTime = 0;
+    stunTime = 25;
     lives--;
     PlaySound(Sounds::shared_instance().get("playerDamage"));
 }
 
 int Player::GetLives() {
     return lives;
+}
+
+void Player::Regen() {
+    if (regenTime >= 750)
+    {
+        regenTime = 0;
+        if(lives<5){
+            lives++;
+            PlaySound(Sounds::shared_instance().get("playerRegen"));
+        }
+    }
 }
