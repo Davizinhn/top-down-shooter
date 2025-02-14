@@ -23,21 +23,20 @@ jobs:
       PROJECT_BUILD_PATH: "${{ github.event.repository.name }}\\projects\\VS2022\\build\\${{ github.event.repository.name }}\\bin\\x64\\Release"
       PROJECT_RELEASE_PATH: ${{ github.event.repository.name }}_dev_win_x64
       PROJECT_RESOURCES_PATH: resources
+      WORKSPACE: main-code.workspace  # Define the workspace directory
 
     steps:
     - name: Checkout this repo
-      uses: actions/checkout@master
+      uses: actions/checkout@v3  # Use v3 or later for better performance
       with:
-        path: ${{ env.PROJECT_NAME }}
+        path: ${{ env.WORKSPACE }}/${{ env.PROJECT_NAME }} # Checkout into workspace
 
     - name: Checkout raylib repo
-      uses: actions/checkout@v4
+      uses: actions/checkout@v3 # Use v3 or later
       with:
         repository: raysan5/raylib
-        path: raylib
+        path: ${{ env.WORKSPACE }}/raylib  # Checkout into workspace
 
-    # NOTE: Visual Studio project build configuration already defines all required directories where project is generated:
-    # $(SolutionDir)\build\$(ProjectName)\bin\$(Platform)\$(Configuration)\
     - name: Setup Release Paths
       run: |
         echo "PROJECT_RELEASE_PATH=${{ env.PROJECT_NAME }}_v${{ github.event.release.tag_name }}_win_x64" >> $GITHUB_ENV
@@ -46,43 +45,42 @@ jobs:
 
     - name: Setup Environment
       run: | 
-        mkdir ${{ env.PROJECT_RELEASE_PATH }}
-        dir
+        mkdir ${{ env.WORKSPACE }}/${{ env.PROJECT_RELEASE_PATH }} # Create in workspace
+        dir ${{ env.WORKSPACE }} # List workspace directory
       shell: cmd
 
-    # Setup MSBuild.exe path if required
     - name: Setup MSBuild path
       uses: microsoft/setup-msbuild@v2
 
     - name: Build raylib Library + Product (VS2022 solution)
       run: |
-        dir
-        cd ${{ env.PROJECT_NAME }}/projects/VS2022
+        dir ${{ env.WORKSPACE }}
+        cd ${{ env.WORKSPACE }}/${{ env.PROJECT_NAME }}/projects/VS2022
         msbuild.exe ${{ env.PROJECT_NAME }}.sln /target:${{ env.PROJECT_NAME }} /property:Configuration=Release /property:Platform=x64 /property:RaylibSrcPath="..\..\..\..\raylib\src"
         cd ../..
       shell: cmd
 
     - name: Generate Artifacts
       run: |
-        dir ${{ env.PROJECT_BUILD_PATH }}
-        copy /Y ${{ env.PROJECT_BUILD_PATH }}\${{ env.PROJECT_NAME }}.exe ${{ env.PROJECT_RELEASE_PATH }}\${{ env.PROJECT_NAME }}.exe
-        xcopy ${{ env.PROJECT_NAME }}\${{ env.PROJECT_RESOURCES_PATH }} ${{ env.PROJECT_RELEASE_PATH }}\${{ env.PROJECT_RESOURCES_PATH }} /s /e /i
-        copy /Y ${{ env.PROJECT_NAME }}\README.md ${{ env.PROJECT_RELEASE_PATH }}\README.md
-        copy /Y ${{ env.PROJECT_NAME }}\LICENSE ${{ env.PROJECT_RELEASE_PATH }}\LICENSE
-        dir ${{ env.PROJECT_RELEASE_PATH }}
-        7z a .\${{ env.PROJECT_RELEASE_PATH }}.zip .\${{ env.PROJECT_RELEASE_PATH }}
+        dir ${{ env.WORKSPACE }}/${{ env.PROJECT_BUILD_PATH }}
+        copy /Y ${{ env.WORKSPACE }}/${{ env.PROJECT_BUILD_PATH }}\${{ env.PROJECT_NAME }}.exe ${{ env.WORKSPACE }}/${{ env.PROJECT_RELEASE_PATH }}\${{ env.PROJECT_NAME }}.exe
+        xcopy ${{ env.WORKSPACE }}/${{ env.PROJECT_NAME }}\${{ env.PROJECT_RESOURCES_PATH }} ${{ env.WORKSPACE }}/${{ env.PROJECT_RELEASE_PATH }}\${{ env.PROJECT_RESOURCES_PATH }} /s /e /i
+        copy /Y ${{ env.WORKSPACE }}/${{ env.PROJECT_NAME }}\README.md ${{ env.WORKSPACE }}/${{ env.PROJECT_RELEASE_PATH }}\README.md
+        copy /Y ${{ env.WORKSPACE }}/${{ env.PROJECT_NAME }}\LICENSE ${{ env.WORKSPACE }}/${{ env.PROJECT_RELEASE_PATH }}\LICENSE
+        dir ${{ env.WORKSPACE }}/${{ env.PROJECT_RELEASE_PATH }}
+        7z a .\${{ env.WORKSPACE }}/${{ env.PROJECT_RELEASE_PATH }}.zip .\${{ env.WORKSPACE }}/${{ env.PROJECT_RELEASE_PATH }}
       shell: cmd
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
       with:
         name: ${{ env.PROJECT_RELEASE_PATH }}.zip
-        path: ./${{ env.PROJECT_RELEASE_PATH }}.zip
+        path: ./${{ env.WORKSPACE }}/${{ env.PROJECT_RELEASE_PATH }}.zip
 
     - name: Upload Artifact to Release
       uses: softprops/action-gh-release@v1
       with:
-        files: ${{ env.PROJECT_RELEASE_PATH }}.zip
+        files: ${{ env.WORKSPACE }}/${{ env.PROJECT_RELEASE_PATH }}.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       if: github.event_name == 'release' && github.event.action == 'published'
